@@ -13,6 +13,7 @@ namespace PackageAccountant3._0.Entities
         public decimal Amount { get; set; }
         public int AccountTypeId { get; set; }
         public string Comments { get; set; }
+        [Key]
         public int Id { get; set; }
         public string UserId { get; set; }
     }

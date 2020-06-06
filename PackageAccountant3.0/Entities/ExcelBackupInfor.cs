@@ -11,6 +11,7 @@ namespace PackageAccountant3._0.Entities
         public DateTime backupdate { get; set; }
         public string backuppath { get; set; }
         public string size { get; set; }
+        [Key]
         public int id { get; set; }
     }
 }
