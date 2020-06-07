@@ -44,6 +44,8 @@ namespace PackageAccountant3._0
             services.AddDbContext<EFPackageDbContext>(options => options.UseSqlServer(connection));
 
             services.AddTransient<IUserInfoBll, UserInfoBll>();
+            services.AddTransient<IMenuBll, MenuBll>();
+            services.AddTransient<IAccountItermDetailsBll, AccountItermDetailsBll>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
