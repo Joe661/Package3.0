@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PackageAccountant3._0.Entities;
+using PackageAccountant3._0.Helper;
 using PackageAccountant3._0.Model;
 using PackageAccountant3._0.Service;
 
@@ -17,11 +18,13 @@ namespace PackageAccountant3._0.Controllers
     {
         private readonly IAccountItermDetailsBll _accountItermDetails;
         private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public AccountItermDetailsController(IAccountItermDetailsBll accountItermDetails,IMapper mapper)
+        public AccountItermDetailsController(IAccountItermDetailsBll accountItermDetails,IMapper mapper, IPropertyMappingService propertyMappingService)
         {
             _accountItermDetails = accountItermDetails ?? throw new ArgumentNullException(nameof(accountItermDetails));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
         [HttpGet(Name =nameof(GetAccountItermDetailsList))]
@@ -38,11 +41,13 @@ namespace PackageAccountant3._0.Controllers
         {
             if (addDto == null)
                 return BadRequest();
+            if (!_propertyMappingService.CheckFiles<AccountItermDetailsAddDto, AccountItermDetails>(addDto))
+                return BadRequest();
 
             _accountItermDetails.AddAccountItermDetails(_mapper.Map<AccountItermDetails>(addDto));
             await _accountItermDetails.SaveAsync();
 
-            return NoContent();
+            return NotFound();
         }
     }
 }

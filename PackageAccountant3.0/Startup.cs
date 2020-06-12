@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PackageAccountant3._0.Data;
+using PackageAccountant3._0.Helper;
 using PackageAccountant3._0.Service;
 
 namespace PackageAccountant3._0
@@ -47,6 +48,7 @@ namespace PackageAccountant3._0
             services.AddTransient<IMenuBll, MenuBll>();
             services.AddTransient<IAccountItermDetailsBll, AccountItermDetailsBll>();
             services.AddTransient<IAccountTypeDetailsBll, AccountTypeDetailsBll>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
