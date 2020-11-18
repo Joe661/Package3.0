@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PackageAccountant3._0.Data;
+using PackageAccountant3._0.Helper;
+using PackageAccountant3._0.Service;
 
 namespace PackageAccountant3._0
 {
@@ -31,7 +35,20 @@ namespace PackageAccountant3._0
                 setup.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
             });
 
-            //services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //services.AddDbContext<EFPackageDbContext>(option =>
+            //{
+            //    option.UseSqlite("Data Source=PackageDB.db");
+            //});
+            var connection = Configuration.GetConnectionString("PackageDatabase");
+            services.AddDbContext<EFPackageDbContext>(options => options.UseSqlServer(connection));
+
+            services.AddTransient<IUserInfoBll, UserInfoBll>();
+            services.AddTransient<IMenuBll, MenuBll>();
+            services.AddTransient<IAccountItermDetailsBll, AccountItermDetailsBll>();
+            services.AddTransient<IAccountTypeDetailsBll, AccountTypeDetailsBll>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

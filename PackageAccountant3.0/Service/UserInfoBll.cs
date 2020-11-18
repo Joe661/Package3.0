@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using PackageAccountant3._0.Data;
 using PackageAccountant3._0.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,21 +21,19 @@ namespace PackageAccountant3._0.Service
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<UserInfo> GetUserInfo(string username)
+        public async Task<UserInfo> GetUserInfoAsync(string username)
         {
-            try
+            if (string.IsNullOrWhiteSpace(username))
             {
-                return new UserInfo();
+                throw new ArgumentNullException();
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+
+            return await _context.UserInfo.FirstOrDefaultAsync(p => p.UserName == username);
         }
 
-        public async Task<bool> CheckUserInfo(string username)
+        public async Task<bool> CheckUserInfoAsync(string username)
         {
-            UserInfo info = await GetUserInfo(username);
+            UserInfo info = await GetUserInfoAsync(username);
             if (info == null)
                 return false;
             else
@@ -41,10 +41,10 @@ namespace PackageAccountant3._0.Service
 
         }
 
-        public async Task<bool> SetUserSession(string username)
+        public async Task<bool> SetUserSessionAsync(string username)
         {
-            var user = await GetUserInfo(username);
-            var result = await CheckUserInfo(username);
+            var user = await GetUserInfoAsync(username);
+            var result = await CheckUserInfoAsync(username);
             if (result)
             {
                 _session.SetString("username",username);

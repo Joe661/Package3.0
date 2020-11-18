@@ -7,6 +7,7 @@ namespace PackageAccountant3._0.Entities
 {
     public class AccountTypeDetails
     {
+        [Key]
         public int AccountTypeId { get; set; }
         public string AccountType { get; set; }
         public string UserId { get; set; }

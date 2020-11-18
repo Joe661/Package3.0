@@ -8,8 +8,8 @@ namespace PackageAccountant3._0.Service
 {
     public interface IUserInfoBll
     {
-         Task<UserInfo> GetUserInfo(string username);
-         Task<bool>  CheckUserInfo(string username);
-         Task<bool> SetUserSession(string username);
+         Task<UserInfo> GetUserInfoAsync(string username);
+         Task<bool> CheckUserInfoAsync(string username);
+         Task<bool> SetUserSessionAsync(string username);
     }
 }
