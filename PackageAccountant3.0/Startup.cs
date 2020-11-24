@@ -70,11 +70,8 @@ namespace PackageAccountant3._0
                     });
                 });
             }
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
