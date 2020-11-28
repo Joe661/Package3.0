@@ -31,20 +31,23 @@ namespace PackageAccountant3._0
         public void ConfigureServices(IServiceCollection services)
         {
             #region 跨域 允许所有来源 
-            /*services.AddCors(options=> {
-                options.AddPolicy("cors",builder=>builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            });*/
+            services.AddCors(options =>
+            {
+                options.AddPolicy("cors", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
             #endregion
 
             #region 跨域 指定来源
-            services.AddCors(options=> {
-                options.AddPolicy("cors",policy=> {
-                    //1.允许跨域来源，多个跨域来源使用','分割
-                    //2.多个跨域来源使用string数组
-                    var strOrgin = Configuration.GetSection("OrginList").GetValue<string>("Url").ToString();
-                    policy.WithOrigins(strOrgin.Split(',')).AllowAnyHeader().AllowAnyMethod();
-                });
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("cors", policy =>
+            //    {
+            //        //1.允许跨域来源，多个跨域来源使用','分割
+            //        //2.多个跨域来源使用string数组
+            //        var strOrgin = Configuration.GetSection("OrginList").GetValue<string>("Url").ToString();
+            //        policy.WithOrigins(strOrgin.Split(',')).AllowAnyHeader().AllowAnyMethod();
+            //    });
+            //});
             #endregion
 
             services.AddControllers(setup=> {

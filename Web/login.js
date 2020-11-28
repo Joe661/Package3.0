@@ -1,12 +1,16 @@
 ﻿var app = angular.module('LoginApp', ['ngRoute']);
-app.controller('LoginController', function ($scope, $http) {
+app.config(function($httpProvider) {
+$httpProvider.defaults.useXDomain = true;
+delete $httpProvider.defaults.headers
+.common['X-Requested-With'];
+});
+ app.controller('LoginController', function ($scope, $http) {
     $scope.GetUserId = function () {
         $http({
-            method: 'POST',
-            url: '/api/Login/Login',
-            params: { username: $scope.username }
+            method: 'GET',
+            url: 'http://localhost:5000/api/user/'+$scope.username
         }).then(function success(response) {
-            if (response.data.result == true) {
+            if (response.data.userName !=''||response.data.userName!=null) {
                 location.href = "app.html"
             }
             else {
@@ -17,4 +21,7 @@ app.controller('LoginController', function ($scope, $http) {
             console.log(response)
         });
     }
-});
+	
+	
+}); 
+
