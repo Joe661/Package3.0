@@ -9,6 +9,10 @@
             $scope.step = 2
         }
     }
+	$scope.ApiUrl = '';
+	$scope.$on('ApiUrl', function(event, data) {  
+          $scope.ApiUrl = data;  
+        }); 
 
     $scope.Step2 = function () {
             $scope.step = 1
@@ -33,7 +37,7 @@
         var file = $("#file")[0].files[0];
         form.append("fileName", file);
         form.append("rhit", $scope.rhit);
-        $http.post("/api/values/UploadFiles", form, {
+        $http.post($scope.ApiUrl+"/api/upload/UploadFiles", form, {
             transformRequest: angular.identity,
             headers: {
                 'Content-Type': undefined

@@ -1,4 +1,7 @@
-﻿var app = angular.module('LoginApp', ['ngRoute']);
+﻿var ApiUrl='http://localhost:5000';
+
+var app = angular.module('LoginApp', ['ngRoute']);
+
 app.config(function($httpProvider) {
 $httpProvider.defaults.useXDomain = true;
 delete $httpProvider.defaults.headers
@@ -8,7 +11,7 @@ delete $httpProvider.defaults.headers
     $scope.GetUserId = function () {
         $http({
             method: 'GET',
-            url: 'http://localhost:5000/api/user/'+$scope.username
+            url: ApiUrl+'/api/user/'+$scope.username
         }).then(function success(response) {
             if (response.data.userName !=''||response.data.userName!=null) {
                 location.href = "app.html"

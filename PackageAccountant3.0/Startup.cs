@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PackageAccountant3._0.Data;
 using PackageAccountant3._0.Helper;
+using PackageAccountant3._0.Model;
 using PackageAccountant3._0.Service;
 
 namespace PackageAccountant3._0
@@ -68,7 +69,11 @@ namespace PackageAccountant3._0
             services.AddTransient<IMenuBll, MenuBll>();
             services.AddTransient<IAccountItermDetailsBll, AccountItermDetailsBll>();
             services.AddTransient<IAccountTypeDetailsBll, AccountTypeDetailsBll>();
+            services.AddTransient<IExcelBackupInofBll, ExcelBackupInofBll>();
+            services.AddTransient<IOfficeHelper, OfficeHelper>();
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
+            UserDefineConfiguration();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,6 +106,13 @@ namespace PackageAccountant3._0
                 //跨域需添加RequireCors方法，cors是在ConfigureServices方法中配置的跨域策略名称
                 //endpoints.MapControllers().RequireCors("cors");
             });
+        }
+
+        public void UserDefineConfiguration()
+        {
+            var con = new ConfigurationBuilder().AddJsonFile("config.json");
+            var config = con.Build();
+            AppSetting.excelPath = config["excelPath"].ToString();
         }
     }
 }
