@@ -28,10 +28,19 @@ namespace PackageAccountant3._0.Controllers
         public async Task<ActionResult<UserInfoDto>> GetUserInfo(string userName)
         {
             var user = await _userInfo.GetUserInfoAsync(userName);
-            if (user == null)
+            try
             {
-                return NotFound();
+                
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                HttpContext.Session.SetString("username", user.UserName);
+                
             }
+            catch (Exception ex)
+            { }
+
             return Ok(_mapper.Map<UserInfoDto>(user));
         }
     }

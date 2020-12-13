@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace PackageAccountant3._0.Controllers
 {
+    [Produces("application/json")]
+    [Consumes("application/json", "multipart/form-data")]
     [Route("api/upload")]
     [ApiController]
     public class UploadController : ControllerBase
@@ -27,37 +29,42 @@ namespace PackageAccountant3._0.Controllers
             _iofficeHelper = iofficeHelper ?? throw new ArgumentNullException(nameof(iofficeHelper));
         }
 
-        [HttpPost(Name = nameof(UploadFiles))]
+        [HttpPost("UploadFiles")]
         public async Task<IActionResult> UploadFiles([FromForm] IFormCollection formData)
         {
             string newFileName = ""; long fileSize = 0;
-            IFormFileCollection files = formData.Files;//等价于Request.Form.Files
-
-            long size = files.Sum(f => f.Length);
-            //string webRootPath = _hostingEnvironment.WebRootPath;
-            //string connectRootPath = _hostingEnvironment.ContentRootPath;
-            foreach (var formFile in files)
+            try
             {
-                var arry = formFile.FileName.Split('.');
-                string fileExt = arry[arry.Length - 1]; //文件扩展名，不含“.”
-                fileSize = formFile.Length; //获得文件大小，以字节为单位
-                newFileName = System.Guid.NewGuid().ToString() + "." + fileExt; //随机生成新的文件名
-                var filePath = AppSetting.excelPath + newFileName;
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                IFormFileCollection files = formData.Files;//等价于Request.Form.Files
+
+                long size = files.Sum(f => f.Length);
+                //string webRootPath = _hostingEnvironment.WebRootPath;
+                //string connectRootPath = _hostingEnvironment.ContentRootPath;
+                foreach (var formFile in files)
                 {
-                    await formFile.CopyToAsync(stream);
+                    var arry = formFile.FileName.Split('.');
+                    string fileExt = arry[arry.Length - 1]; //文件扩展名，不含“.”
+                    fileSize = formFile.Length; //获得文件大小，以字节为单位
+                    newFileName = System.Guid.NewGuid().ToString() + "." + fileExt; //随机生成新的文件名
+                    var filePath = AppSetting.excelPath + newFileName;
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                    //add the backup information
+
+                    _upload.Insert(new ExcelBackupInfor() { backupdate = DateTime.Now, size = fileSize.ToString(), backuppath = filePath });
+                    var data = _iofficeHelper.ReadExcelToDataTable(filePath);
+                    var userid = HttpContext.Session.GetString("username");
+                    //insert account iterm data
+                    //_iaccountItermDetailsBll.Insert(data, userid);
+                    //_iaccountTypeDetailsBll.Insert(data, userid);
+                    //_iincomeExpenseDetailsBll.Insert(data, userid, "");
+
                 }
-                //add the backup information
-
-                _upload.Insert(new ExcelBackupInfor() { backupdate = DateTime.Now, size = fileSize.ToString(), backuppath = filePath });
-                var data = _iofficeHelper.ReadExcelToDataTable(filePath);
-                var userid = HttpContext.Session.GetString("username");
-                //insert account iterm data
-                //_iaccountItermDetailsBll.Insert(data, userid);
-                //_iaccountTypeDetailsBll.Insert(data, userid);
-                //_iincomeExpenseDetailsBll.Insert(data, userid, "");
-
             }
+            catch (Exception ex)
+            { }
 
             return Ok(new
             {

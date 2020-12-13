@@ -43,7 +43,8 @@ app.config(['$routeProvider',
         otherwise({
             redirectTo: '/default'
         });
-}); */
+}); */ 
+
 app.controller("AppController", function ($scope, $http) {
     // 父级接收  
     $scope.$on('page', function (event, data) {
@@ -56,7 +57,7 @@ app.controller("AppController", function ($scope, $http) {
                 $scope.menulist = data.data;
         })
 		
-		$scope.$broadcast('ApiUrl', ApiUrl);
+		$scope.$broadcast('config.ApiUrl', ApiUrl);
     }
 
     $scope.GetMenuList();

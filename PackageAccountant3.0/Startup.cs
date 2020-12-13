@@ -31,6 +31,7 @@ namespace PackageAccountant3._0
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             #region 跨域 允许所有来源 
             services.AddCors(options =>
             {
